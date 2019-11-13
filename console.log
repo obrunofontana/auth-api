@@ -1,0 +1,6 @@
+2019-11-13 12:45:43 [INFO]: Teste
+2019-11-13 12:47:12 [INFO]: Iniciando a chamanda (GET) pelo recurso "/users"
+2019-11-13 12:52:09 [INFO]: Iniciando a chamanda (POST) pelo recurso "/api/register" [object Object]
+2019-11-13 12:52:47 [INFO]: Iniciando a chamanda (POST) pelo recurso "/api/register" {}
+2019-11-13 12:54:53 [INFO]: Iniciando a chamanda (GET) pelo recurso "/api/me"
+2019-11-13 12:56:13 [INFO]: Servidor Express API: Rodando em http://localhost:3000

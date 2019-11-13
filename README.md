@@ -1,2 +1,2 @@
-# auth-api
-Api authentication users
+# Authentication API
+Api que realiza autenticação de usuários

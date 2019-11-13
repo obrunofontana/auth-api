@@ -1,0 +1,38 @@
+{
+  "name": "auth-api",
+  "version": "1.0.0",
+  "description": "API de Autenticação de usuários",
+  "main": "index.js",
+  "scripts": {
+    "start": "babel-watch server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/obrunofontana/auth-api.git"
+  },
+  "author": "Bruno Fontana",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/obrunofontana/auth-api/issues"
+  },
+  "homepage": "https://github.com/obrunofontana/auth-api#readme",
+  "dependencies": {
+    "@babel/polyfill": "^7.7.0",
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",   
+    "cors": "^2.8.5",
+    "express": "^4.16.3",
+    "jsonwebtoken": "^8.2.1",
+    "logger": "0.0.1",
+    "moment": "^2.24.0",
+    "mongoose": "^5.7.10",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-transform-runtime": "^7.6.2",
+    "@babel/preset-env": "^7.5.5",
+    "babel-watch": "^7.0.0"
+  }
+}
