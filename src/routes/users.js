@@ -43,11 +43,11 @@ router.post("/authenticate", async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        //console.log(email, password);
+        console.log(email, password);
 
         const user = await User.findOne({ email });
 
-        //console.log(user);
+        console.log(user);
 
         if (!user) {
             return res.status(400).json({ error: "Ops! Usuário não encontrado" });
@@ -69,12 +69,19 @@ router.post("/authenticate", async (req, res) => {
 router.use(authMiddleware);
 
 //Esta rota será utilizada somente por usuários autenticados
-router.get("/me", async (req, res) => {
+router.get("/users/me", async (req, res) => {
     log.logger.info('Iniciando a chamanda (GET) pelo recurso "/api/me"');
     try {
         const { userId } = req;
 
-        const user = await User.findById(userId);
+        const userAux = await User.findById(userId);
+
+        const user = {
+            id: userAux._id,
+            name: userAux.name,            
+        }
+
+        //console.log(user);
 
         return res.json({ user });
     } catch (err) {
