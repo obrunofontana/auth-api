@@ -3,7 +3,11 @@ const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 const UserSchema = new mongoose.Schema({
-  name: {
+  firstName: {
+    type: String,
+    require: true
+  },
+  lastName: {
     type: String,
     require: true
   },
@@ -16,10 +20,35 @@ const UserSchema = new mongoose.Schema({
   password: {
     type: String
   },
+  passwordConfirmation: {
+    type: String
+  },
+  photo: {
+    type: String,
+  },
+  zipCode: {
+    type: String,
+  },
+  state: {
+    type: String,
+  },
+  city: {
+    type: String,
+  },
+  address: {
+    type: String,
+  },
+  destinationAddress: {
+    type: String,
+  },
+  vehicles: {
+    type: String,
+  },
   createdAt: {
     type: Date,
     default: Date.now
   }
+  
 });
 
 //Aqui utiliza "UserSchema.pre" para criptografar a senha do usuário automaticamente toda vez que um novo usuário for criado ou alterado.

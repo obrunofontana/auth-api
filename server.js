@@ -17,6 +17,7 @@ mongoose.connect(config.db,
 
 // Carrega o model de Usuário
 require("./src/models/user");
+require("./src/models/brand");
 
 
 app.use(bodyParser.json());
@@ -26,6 +27,9 @@ app.use(cors());
 
 // Inicia as rotas da API
 app.use("/api", require("./src/routes/users"));
+app.use("/api", require("./src/routes/brands"));
+
+//
 
 
 app.listen(port, () => {

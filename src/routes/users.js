@@ -14,23 +14,42 @@ router.get("/users", async (req, res) => {
 
     await User.find()
         .then((result) => {
-            res.status(200).json({ users: result });
+
+            const users = [];
+
+            result.forEach(user => {
+
+                let userAux = {
+                    id: user._id,
+                    firstName: user.firstName,
+                    lastName: user.lastName,
+                    email: user.email
+                }
+
+                users.push(userAux);
+            })
+
+
+            res.status(200).json({ users });
         })
         .catch((error) => {
             res.status(500).json(error);
         });
 });
 
-router.post("/register", async (req, res) => {
-    log.logger.info('Iniciando a chamanda (POST) pelo recurso "/api/register"');
-    const { email, username } = req.body;
+router.post("/users", async (req, res) => {
+    log.logger.info('Iniciando a chamanda (POST) pelo recurso "/api/users"');
+
+    const { email, username } = req.body.user;
+
+    console.log(req.body.user);
 
     try {
         if (await User.findOne({ email })) {
             return res.status(400).json({ error: "Ops! Usuário já existe!" });
         }
 
-        const user = await User.create(req.body);
+        const user = await User.create(req.body.user);
 
         return res.json({ user });
     } catch (err) {
@@ -47,7 +66,7 @@ router.post("/authenticate", async (req, res) => {
 
         const user = await User.findOne({ email });
 
-        console.log(user);
+        //console.log(user);
 
         if (!user) {
             return res.status(400).json({ error: "Ops! Usuário não encontrado" });
@@ -57,8 +76,12 @@ router.post("/authenticate", async (req, res) => {
             return res.status(400).json({ error: "Senha inválida." });
         }
 
+
         return res.json({
-            user,
+            user: {
+                id: user._id,
+                email: user.email
+            },
             token: user.generateToken()
         });
     } catch (err) {
@@ -72,13 +95,16 @@ router.use(authMiddleware);
 router.get("/users/me", async (req, res) => {
     log.logger.info('Iniciando a chamanda (GET) pelo recurso "/api/me"');
     try {
+
         const { userId } = req;
 
         const userAux = await User.findById(userId);
 
         const user = {
             id: userAux._id,
-            name: userAux.name,            
+            firstName: userAux.firstName,
+            lastName: userAux.firstName,
+            email: userAux.email,
         }
 
         //console.log(user);
