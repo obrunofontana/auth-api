@@ -19,12 +19,33 @@ module.exports = (app) => {
 
                         let userAux = {
                             id: user._id,
-                            firstName: user.firstName,
-                            lastName: user.lastName,
-                            email: user.email
+                            uid: user.uid,
+                            name: user.name,
+                            email: user.email,
+                            photo: user.photo,
+                            zipCode: user.zipCode,
+                            state: user.state,
+                            city: user.city,
+                            address: user.address,
+                            destinationAddress: user.destinationAddress,
+                            vehicles: user.vehicles,
+                            created: user.createdAt
                         }
 
                         users.push(userAux);
+                        //Se necessário deletar a collection toda utilizar o fonte abaixo:
+                        /*User.deleteOne({ _id: user._id })
+
+                          .then(result => {
+                              if (result) {
+                                  res.json(result);
+                              } else {
+                                  res.status(404).json('Not found');
+                              }
+                          })
+                          .catch(error => {
+                              res.status(500).json(error);
+                          });*/
                     })
 
 
@@ -39,16 +60,16 @@ module.exports = (app) => {
 
             log.logger.info('Iniciando a chamanda (POST) pelo recurso "/users"');
 
-            const { email, username } = req.body.user;
+            const { email, username } = req.body;
 
-            console.log(req.body.user);
+            console.log(req.body);
 
             try {
                 if (await User.findOne({ email })) {
                     return res.status(400).json({ error: "Ops! Usuário já existe!" });
                 }
 
-                const user = await User.create(req.body.user);
+                const user = await User.create(req.body);
 
                 return res.json({ user });
             } catch (err) {
@@ -128,7 +149,17 @@ module.exports = (app) => {
                 return res.json({
                     user: {
                         id: user._id,
-                        email: user.email
+                        uid: user.uid,
+                        name: user.name,
+                        email: user.email,
+                        photo: user.photo,
+                        zipCode: user.zipCode,
+                        state: user.state,
+                        city: user.city,
+                        address: user.address,
+                        destinationAddress: user.destinationAddress,
+                        vehicles: user.vehicles,
+                        created: user.createdAt
                     },
                     token: user.generateToken()
                 });
