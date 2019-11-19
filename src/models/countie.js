@@ -5,7 +5,7 @@ const CountieSchema = new mongoose.Schema({
         type: String,
     },
     state: {
-        type: DataType.INTEGER,
+        type: Number,
     },
     uf: {
         type: String,

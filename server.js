@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const config = require("./src/config/enviroments");
 const cors = require("cors");
+const consign = require('consign');
 
 const port = 3000;
 
@@ -16,8 +17,8 @@ mongoose.connect(config.db,
 );
 
 // Carrega o model de Usuário
-require("./src/models/user");
-require("./src/models/brand");
+//require("./src/models/user");
+//require("./src/models/brand");
 
 
 app.use(bodyParser.json());
@@ -25,9 +26,15 @@ app.use(bodyParser.json());
 //Permite requeisições Cross-Origin Request
 app.use(cors());
 
+consign()
+  .include('src/models/')
+  .then('src/middlewares/')
+  .then('src/routes/')
+  .into(app);
+
 // Inicia as rotas da API
-app.use("/api", require("./src/routes/users"));
-app.use("/api", require("./src/routes/brands"));
+//app.use("/api", require("./src/routes/users"));
+//app.use("/api", require("./src/routes/brands"));
 
 //
 
