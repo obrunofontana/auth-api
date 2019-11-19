@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 
 const CountieSchema = new mongoose.Schema({
+    key: {
+        type: String,
+    },
     name: {
         type: String,
     },

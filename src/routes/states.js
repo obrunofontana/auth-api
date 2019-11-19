@@ -3,79 +3,79 @@ const log = require('../../logger.js');
 
 module.exports = (app) => {
 
-    const Brand = mongoose.model("Brand");
+    const State = mongoose.model("State");
 
-    app.route('/brands')
+
+    app.route('/states')
         .get(async (req, res) => {
 
-            log.logger.info('Iniciando a chamada (GET) pelo recurso "/brands"');
+            log.logger.info('Iniciando a chamada (GET) pelo recurso "/states"');
 
-            await Brand.find()
+            await State.find()
                 .then((result) => {
 
-                    const brands = [];
+                    const states = [];
 
-                    result.forEach(brand => {
+                    result.forEach(state => {
 
-                        let brandAux = {
-                            id: brand._id,
-                            key: brand.key,
-                            name: brand.name,
-                            fipeName: brand.fipeName,
-                            created: brand.createdAt
+                        let stateAux = {
+                            id: state._id,
+                            key: state.key,
+                            sigla: state.sigla,
+                            name: state.name,
+                            created: state.createdAt
                         }
 
-                        brands.push(brandAux);
-
+                        states.push(stateAux);
                         //Se necessário deletar a collection toda utilizar o fonte abaixo:
-                        /* Brand.deleteOne({ _id: brand.id })
-                             .then(result => {
-                                 if (result) {
-                                     res.json(result);
-                                 } else {
-                                     res.status(404).json('Not found');
-                                 }
-                             })
-                             .catch(error => {
-                                 res.status(500).json(error);
-                             })*/
+                        /*State.deleteOne({ _id: state._id })
+
+                            .then(result => {
+                                if (result) {
+                                    res.json(result);
+                                } else {
+                                    res.status(404).json('Not found');
+                                }
+                            })
+                            .catch(error => {
+                                res.status(500).json(error);
+                            });*/
                     });
 
-                    res.status(200).json({ brands });
+
+                    res.status(200).json({ states });
                 })
                 .catch((error) => {
                     res.status(500).json(error);
                 });
 
-
-
         })
         .post(async (req, res) => {
 
-            log.logger.info('Iniciando a chamanda (POST) pelo recurso "/brands"');
+            log.logger.info('Iniciando a chamanda (POST) pelo recurso "/states"');
 
-            const { key } = req.body;
+            const { sigla } = req.body;
 
             console.log(req.body);
 
             try {
-                if (await Brand.findOne({ key: key })) {
+                if (await State.findOne({ sigla: sigla })) {
                     return res.status(400).json({ error: "Ops! Registro já existe" });
                 }
 
-                const brand = await Brand.create(req.body);
+                const state = await State.create(req.body);
 
-                return res.json({ brand });
+                return res.json({ state });
             } catch (err) {
                 return res.status(400).json({ error: "Ops! Falha ao cadastrar novo registro" });
             }
 
         });
     //Filtro por ID
-    app.route('/brands/:id')
+    app.route('/states/:id')
         .get((req, res) => {
             //console.log(req.params)
-            Brand.findById({ _id: req.params.id })
+            State.findById({ _id: req.params.id })
                 .then(result => {
                     if (result) {
                         res.json({ result });
@@ -88,7 +88,7 @@ module.exports = (app) => {
                 });
         })
         .delete((req, res) => {
-            Brand.deleteOne({ _id: req.params.id })
+            State.deleteOne({ _id: req.params.id })
                 .then(result => {
                     if (result) {
                         res.json(result);

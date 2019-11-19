@@ -3,51 +3,37 @@ const log = require('../../logger.js');
 
 module.exports = (app) => {
 
-    const Brand = mongoose.model("Brand");
+    const Countie = mongoose.model("Countie");
 
-    app.route('/brands')
+    app.route('/counties')
         .get(async (req, res) => {
 
-            log.logger.info('Iniciando a chamada (GET) pelo recurso "/brands"');
+            log.logger.info('Iniciando a chamada (GET) pelo recurso "/counties"');
 
-            await Brand.find()
+            await Countie.find()
                 .then((result) => {
 
-                    const brands = [];
+                    const counties = [];
 
-                    result.forEach(brand => {
+                    result.forEach(countie => {
 
-                        let brandAux = {
-                            id: brand._id,
-                            key: brand.key,
-                            name: brand.name,
-                            fipeName: brand.fipeName,
-                            created: brand.createdAt
+                        let countieAux = {
+                            id: countie._id,
+                            key: countie.key,
+                            name: countie.name,
+                            fipeName: countie.fipeName,
+                            created: countie.createdAt
                         }
 
-                        brands.push(brandAux);
+                        counties.push(countieAux);
+                    })
 
-                        //Se necessário deletar a collection toda utilizar o fonte abaixo:
-                        /* Brand.deleteOne({ _id: brand.id })
-                             .then(result => {
-                                 if (result) {
-                                     res.json(result);
-                                 } else {
-                                     res.status(404).json('Not found');
-                                 }
-                             })
-                             .catch(error => {
-                                 res.status(500).json(error);
-                             })*/
-                    });
 
-                    res.status(200).json({ brands });
+                    res.status(200).json({ counties });
                 })
                 .catch((error) => {
                     res.status(500).json(error);
                 });
-
-
 
         })
         .post(async (req, res) => {
@@ -56,14 +42,14 @@ module.exports = (app) => {
 
             const { key } = req.body;
 
-            console.log(req.body);
+            //console.log(req.body);
 
             try {
-                if (await Brand.findOne({ key: key })) {
+                if (await Countie.findOne({ key: key })) {
                     return res.status(400).json({ error: "Ops! Registro já existe" });
                 }
 
-                const brand = await Brand.create(req.body);
+                const brand = await Countie.create(req.body);
 
                 return res.json({ brand });
             } catch (err) {
@@ -72,10 +58,10 @@ module.exports = (app) => {
 
         });
     //Filtro por ID
-    app.route('/brands/:id')
+    app.route('/counties/:id')
         .get((req, res) => {
             //console.log(req.params)
-            Brand.findById({ _id: req.params.id })
+            Countie.findById({ _id: req.params.id })
                 .then(result => {
                     if (result) {
                         res.json({ result });
@@ -88,10 +74,27 @@ module.exports = (app) => {
                 });
         })
         .delete((req, res) => {
-            Brand.deleteOne({ _id: req.params.id })
+            Countie.deleteOne({ _id: req.params.id })
                 .then(result => {
                     if (result) {
                         res.json(result);
+                    } else {
+                        res.status(404).json('Not found');
+                    }
+                })
+                .catch(error => {
+                    res.status(500).json(error);
+                });
+        })
+
+    //Encontra todos os municipios pelo id do estado
+    app.route('/counties/state/:state')
+        .get((req, res) => {
+            //console.log(req.params)
+            Countie.find({ state: req.params.state })
+                .then(result => {
+                    if (result) {
+                        res.json({ result });
                     } else {
                         res.status(404).json('Not found');
                     }

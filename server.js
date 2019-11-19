@@ -1,11 +1,16 @@
-const app = require("express")();
-const bodyParser = require("body-parser");
-const mongoose = require("mongoose");
-const config = require("./src/config/enviroments");
-const cors = require("cors");
-const consign = require('consign');
+const express = require('express');
+const bodyParser = require('body-parser');
+const mongoose = require('mongoose');
+const config = require('./src/config/enviroments');
+const cors = require('cors');
+const consign = require('consign')
+const authMiddleware = require('./src/middlewares/auth');
+const router = express.Router();
 
 const port = 3000;
+
+//Declarar a aplicação
+const app = express();
 
 // Conecta no MongoDB
 mongoose.connect(config.db,
@@ -16,10 +21,7 @@ mongoose.connect(config.db,
   }
 );
 
-// Carrega o model de Usuário
-//require("./src/models/user");
-//require("./src/models/brand");
-
+app.use(router.use(authMiddleware));
 
 app.use(bodyParser.json());
 
@@ -27,16 +29,10 @@ app.use(bodyParser.json());
 app.use(cors());
 
 consign()
-  .include('src/models/')
-  .then('src/middlewares/')
+  .include('src/middlewares/')
+  .then('src/models/')
   .then('src/routes/')
   .into(app);
-
-// Inicia as rotas da API
-//app.use("/api", require("./src/routes/users"));
-//app.use("/api", require("./src/routes/brands"));
-
-//
 
 
 app.listen(port, () => {

@@ -2,6 +2,9 @@
 const mongoose = require("mongoose");
 
 const StateSchema = new mongoose.Schema({
+    key: {
+        type: String,
+    },
     sigla: {
         type: String,
     },

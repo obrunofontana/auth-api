@@ -49,7 +49,10 @@ const UserSchema = new mongoose.Schema({
     default: Date.now
   }
   
-});
+}, 
+  
+
+);
 
 //Aqui utiliza "UserSchema.pre" para criptografar a senha do usuário automaticamente toda vez que um novo usuário for criado ou alterado.
 UserSchema.pre("save", async function hashPassword(next) {
