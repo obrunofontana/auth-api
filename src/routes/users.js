@@ -18,8 +18,7 @@ module.exports = (app) => {
                     result.forEach(user => {
 
                         let userAux = {
-                            id: user._id,
-                            uid: user.uid,
+                            id: user._id,                           
                             name: user.name,
                             email: user.email,
                             photo: user.photo,
@@ -60,16 +59,16 @@ module.exports = (app) => {
 
             log.logger.info('Iniciando a chamanda (POST) pelo recurso "/users"');
 
-            const { email, username } = req.body;
+            const { email, username } = req.body.user;
 
-            console.log(req.body);
+            console.log(req.body.user);
 
             try {
                 if (await User.findOne({ email })) {
                     return res.status(400).json({ error: "Ops! Usuário já existe!" });
                 }
 
-                const user = await User.create(req.body);
+                const user = await User.create(req.body.user);
 
                 return res.json({ user });
             } catch (err) {
@@ -135,7 +134,7 @@ module.exports = (app) => {
 
                 const user = await User.findOne({ email });
 
-                //console.log(user);
+                console.log(user);
 
                 if (!user) {
                     return res.status(400).json({ error: "Ops! Usuário não encontrado" });
@@ -152,6 +151,7 @@ module.exports = (app) => {
                         uid: user.uid,
                         name: user.name,
                         email: user.email,
+                        password: user.password,
                         photo: user.photo,
                         zipCode: user.zipCode,
                         state: user.state,
