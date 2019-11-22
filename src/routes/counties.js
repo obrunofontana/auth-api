@@ -61,9 +61,16 @@ module.exports = (app) => {
     app.route('/counties/:id')
         .get((req, res) => {
             //console.log(req.params)
-            Countie.findById({ _id: req.params.id })
+            Countie.findOne({ key: req.params.id })
                 .then(result => {
                     if (result) {
+                        result = {
+                            id: result._id,
+                            key: result.key,
+                            name: result.name,
+                            state: result.state,
+                            uf: result.uf
+                        }
                         res.json({ result });
                     } else {
                         res.status(404).json('Not found');
@@ -87,13 +94,30 @@ module.exports = (app) => {
                 });
         })
 
-    //Encontra todos os municipios pelo id do estado
     app.route('/counties/state/:state')
         .get((req, res) => {
-            //console.log(req.params)
+          //  console.log(req.params)
+           // log.logger.info(req.params)
             Countie.find({ state: req.params.state })
                 .then(result => {
                     if (result) {
+                        //console.log('result', result);
+                        resultAux = [];
+
+                        result.forEach(est => {
+
+                            let aux = {
+                                id: est._id,
+                                key: est.key,
+                                name: est.name,
+                                state: est.state,
+                                uf: est.uf
+                            }
+                            resultAux.push(aux);
+
+                        });
+                        result = resultAux;
+
                         res.json({ result });
                     } else {
                         res.status(404).json('Not found');
@@ -102,5 +126,5 @@ module.exports = (app) => {
                 .catch(error => {
                     res.status(500).json(error);
                 });
-        })
+        });
 };

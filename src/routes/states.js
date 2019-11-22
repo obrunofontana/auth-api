@@ -75,10 +75,14 @@ module.exports = (app) => {
     app.route('/states/:id')
         .get((req, res) => {
             //console.log(req.params)
-            State.findById({ _id: req.params.id })
+            State.findOne({ key: req.params.id })
                 .then(result => {
                     if (result) {
-                        res.json({ result });
+                        res.json({ result: {
+                            id: result.key,
+                            name: result.name,
+                            sigla: result.sigla
+                        } });
                     } else {
                         res.status(404).json('Not found');
                     }
