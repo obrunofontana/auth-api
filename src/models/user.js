@@ -38,10 +38,15 @@ const UserSchema = new mongoose.Schema({
     type: String,
   },
   destinationAddress: {
-    type: String,
+    address: { type: String },
+    zipCode: { type: String },
+    neib: { type: String }
   },
   vehicles: {
-    type: String,
+    name: { type: String },
+    fuel: { type: String },
+    brand: { type: String },
+    km: { type: String },
   },
   createdAt: {
     type: Date,

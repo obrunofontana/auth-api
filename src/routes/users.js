@@ -18,7 +18,7 @@ module.exports = (app) => {
                     result.forEach(user => {
 
                         let userAux = {
-                            id: user._id,                           
+                            id: user._id,
                             name: user.name,
                             email: user.email,
                             password: user.password,
@@ -62,7 +62,7 @@ module.exports = (app) => {
 
             const { email, username } = req.body.user;
 
-            console.log(req.body.user);
+            //console.log(req.body.user);
 
             try {
                 if (await User.findOne({ email })) {
@@ -83,6 +83,24 @@ module.exports = (app) => {
             //console.log(req.params)
             User.findById({ _id: req.params.id })
                 .then(result => {
+
+                    let userAux = {
+                        id: result._id,
+                        name: result.name,
+                        email: result.email,
+                        password: result.password,
+                        photo: result.photo,
+                        zipCode: result.zipCode,
+                        state: result.state,
+                        city: result.city,
+                        address: result.address,
+                        destinationAddress: result.destinationAddress,
+                        vehicles: result.vehicles,
+                        created: result.createdAt
+                    }
+                    result = userAux;
+
+
                     if (result) {
                         res.json({ result });
                     } else {
@@ -107,12 +125,37 @@ module.exports = (app) => {
                 });
         })
         .patch((req, res) => {
-            //console.log(req.body);
-            //Muito BOSTA ter que fazer desta forma... Verificar como fazer "merge" das informações, 
-            User.update({ _id: req.params.id }, { $set: { email: req.body.email } }, { new: true })
+            console.log(req.body);       
+            User.updateOne({ _id: req.params.id }, {
+                $set: {                   
+                    zipCode: req.body.zipCode,
+                    state: req.body.state,
+                    city: req.body.city,
+                    address: req.body.address,
+                    destinationAddress: req.body.destinationAddress,
+                    vehicles: req.body.vehicles
+                }
+            }, { new: true })
                 .then(result => {
                     if (result) {
                         res.json(result);
+                    } else {
+                        res.status(404).json('Not found');
+                    }
+                })
+                .catch(error => {
+                    res.status(500).json(error);
+                });
+        });
+
+    //Retorno o usuário de acordo com o email
+    app.route('/users/email/:email')
+        .get((req, res) => {
+            //console.log(req.params)
+            User.findOne({ email: req.params.email })
+                .then(result => {
+                    if (result) {
+                        res.json({ result });
                     } else {
                         res.status(404).json('Not found');
                     }
@@ -149,7 +192,6 @@ module.exports = (app) => {
                 return res.json({
                     user: {
                         id: user._id,
-                        uid: user.uid,
                         name: user.name,
                         email: user.email,
                         password: user.password,
