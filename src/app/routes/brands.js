@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const log = require('../../logger.js');
+const log = require('../../../logger.js');
 
 module.exports = (app) => {
 

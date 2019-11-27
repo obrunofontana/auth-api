@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { promisify } = require("util");
-const log = require('../../logger.js');
+const log = require('../../../logger.js');
 
 module.exports = async (req, res, next) => {
 

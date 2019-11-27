@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const config = require('./src/config/enviroments');
 const cors = require('cors');
 const consign = require('consign')
-const authMiddleware = require('./src/middlewares/auth');
+const authMiddleware = require('./src/app/middlewares/auth');
 const router = express.Router();
 
 const port = 3000;
@@ -29,9 +29,9 @@ app.use(bodyParser.json());
 app.use(cors());
 
 consign()
-  .include('src/middlewares/')
-  .then('src/models/')
-  .then('src/routes/')
+  .include('src/app/middlewares/')
+  .then('src/app/models/')
+  .then('src/app/routes/')
   .into(app);
 
 

@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const log = require('../../logger.js');
+const log = require('../../../logger.js');
 
 module.exports = (app) => {
 
@@ -30,7 +30,7 @@ module.exports = (app) => {
                             destinationAddress: user.destinationAddress,
                             vehicles: user.vehicles,
                             created: user.createdAt
-                        }
+                        };
 
                         users.push(userAux);
                         //Se necessário deletar a collection toda utilizar o fonte abaixo:
@@ -125,9 +125,9 @@ module.exports = (app) => {
                 });
         })
         .patch((req, res) => {
-            console.log(req.body);       
+            console.log(req.body);
             User.updateOne({ _id: req.params.id }, {
-                $set: {                   
+                $set: {
                     zipCode: req.body.zipCode,
                     state: req.body.state,
                     city: req.body.city,
@@ -151,7 +151,7 @@ module.exports = (app) => {
     //Retorno o usuário de acordo com o email
     app.route('/users/email/:email')
         .get((req, res) => {
-            //console.log(req.params)
+            console.log(req.params)
             User.findOne({ email: req.params.email })
                 .then(result => {
                     if (result) {
@@ -224,9 +224,16 @@ module.exports = (app) => {
 
                 const user = {
                     id: userAux._id,
-                    firstName: userAux.firstName,
-                    lastName: userAux.firstName,
-                    email: userAux.email,
+                    name: userAux.name,
+                    email: userAux.email,                   
+                    photo: userAux.photo,
+                    zipCode: userAux.zipCode,
+                    state: userAux.state,
+                    city: userAux.city,
+                    address: userAux.address,
+                    destinationAddress: userAux.destinationAddress,
+                    vehicles: userAux.vehicles,
+                    created: userAux.createdAt
                 }
 
                 //console.log(user);
