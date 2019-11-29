@@ -1,19 +1,27 @@
 const nodemailer = require('nodemailer');
 const path = require('path');
-const { host, port, user, pass } = require('../config/mail.json');
+const { user, pass, service } = require('../config/mail.json');
 const hbs = require('nodemailer-express-handlebars');
 
 const transport = nodemailer.createTransport({
-    host,
-    port,
-    auth: { user, pass }
+    service,
+    auth: {
+        user,
+        pass
+    }
 });
 
+const options = {
+    viewEngine: {
+        extname: '.hbs',
+        layoutsDir: path.resolve('./src/resources/mail/views/email/'),
+        defaultLayout: 'template',
+        partialsDir: path.resolve('./src/resources/mail/views/partials/')
+    },
+    viewPath: path.resolve('./src/resources/mail/views/email/'),
+    extName: '.hbs'
+}
 
-transport.use('compile', hbs({
-    viewEngine: 'handlebars',
-    viewPath: path.resolve('./src/resources/mail'), //Caminho onde meus templates de email ficaram salvos
-    extName: '.html', //Extensão que irei utilizar
-}))
+transport.use('compile', hbs(options));
 
 module.exports = transport;

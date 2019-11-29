@@ -1,6 +1,14 @@
 {
-    "host": "smtp.mailtrap.io",
-    "port": 2525,
-    "user": "833b9d47b319b6",
-    "pass": "73a64a223e94f8"
+    "host": "smtp.gmail.com",
+    "port": 465,
+    "service": "gmail",
+    "pass": "Y73ab9C@365",
+    "user": "noreply.rodizcar@gmail.com",
+    "type": "OAuth2",  
+    "clientId": "442798462279-0ci9pun3be8gonum9k5pun6t6a4vqdfc.apps.googleusercontent.com",
+    "clientSecret": "7r_q6kF9_5GpsvYapvtVbVVS",
+    "refreshToken": "1//04QnOhmK9llmjCgYIARAAGAQSNwF-L9Ir7_upQsOYTIqBzgxlFBIzZS-wpys82WMrPgLQvrzmb2c0B6vjIgzSJd0yR7UMbI2hNHU"
 }
+
+
+

@@ -1,5 +1,9 @@
 const mongoose = require('mongoose');
+const crypto = require('crypto');
+const mailer = require('../../modules/mailer');
 const log = require('../../../logger.js');
+const authMail = require('../../config/mail.json');
+
 
 module.exports = (app) => {
 
@@ -29,7 +33,8 @@ module.exports = (app) => {
                             address: user.address,
                             destinationAddress: user.destinationAddress,
                             vehicles: user.vehicles,
-                            created: user.createdAt
+                            created: user.createdAt,
+                            passwordResetToken: user.passwordResetToken
                         };
 
                         users.push(userAux);
@@ -210,7 +215,7 @@ module.exports = (app) => {
                 return res.status(400).json({ error: "Falha na autenticação do usuário." });
             }
 
-        })
+        });
 
     app.route('/me')
         .get(async (req, res) => {
@@ -225,7 +230,7 @@ module.exports = (app) => {
                 const user = {
                     id: userAux._id,
                     name: userAux.name,
-                    email: userAux.email,                   
+                    email: userAux.email,
                     photo: userAux.photo,
                     zipCode: userAux.zipCode,
                     state: userAux.state,
@@ -243,6 +248,88 @@ module.exports = (app) => {
                 return res.status(400).json({ error: "Não é possível obter informações do usuário" });
             }
 
-        })
+        });
+
+    //Recuperação de senha
+
+    app.route('/forgot_password')
+        .post(async (req, res) => {
+
+            const { email } = req.body
+            try {
+                const user = await User.findOne({ email })
+
+                if (!user) {
+                    return res.status(400).json({ error: 'User not found' })
+                }
+
+                const token = crypto.randomBytes(20).toString('hex')
+                const now = new Date()
+                now.setHours(now.getHours() + 1)
+
+                await User.findByIdAndUpdate(user.id, {
+                    $set: {
+                        passwordResetToken: token,
+                        passwordResetExpires: now
+                    }
+                })
+
+
+                let mailOptions = {
+                    from: 'noreply.rodizcar@gmail.com',
+                    to: email,
+                    template: 'forgot_password',
+                    subject: 'Redefinição de senha, Rodizcar',
+                    context: { token },
+                }
+
+                mailer.sendMail(mailOptions, (err, info) => {
+                    if (err) {
+                        console.log('Message %s sent: %s', info);
+                        return res.status(400).json({ error: err })
+                    }
+                    return res.status(200).send({ info: info });
+                });
+
+
+            } catch (error) {
+                console.log(error)
+                return res.status(400).json(error)
+            }
+
+
+
+        });
+    app.route('/reset_password')
+        .post(async (req, res) => {
+
+            const { email, token, password } = req.body
+            try {
+                const user = await User.findOne({ email })
+                    .select('+passwordResetToken +passwordResetExpires')
+
+                if (!user) {
+                    return res.status(400).json({ error: 'User not found' })
+                }
+
+                if (token !== user.passwordResetToken) {
+                    return res.status(400).json({ error: 'Token invalid' })
+                }
+
+                const now = new Date()
+
+                if (now > user.passwordResetExpires) {
+                    return res.status(400).json({ error: 'Token expired, generate a new one' })
+                }
+
+                user.password = password
+                await user.save()
+
+                return res.status(200).send({ result: 'Info: Senha alterado com sucesso!' });
+
+            } catch (error) {
+                res.status(400).json(error)
+            }
+        });
 
 };
